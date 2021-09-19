@@ -13,141 +13,88 @@ namespace DesafioLinx
             var entrada = Console.ReadLine().ToUpper();
             int x = 0;
             int y = 0;
+
+            try
+            {
+                SwitchInicial(ref x, ref y, entrada);
+            }
+            catch (Exception ex)
+            {
+                x = 999;
+                y = 999;                
+            }
+            
+
+            Console.WriteLine($"({x}, {y})");
+            Console.ReadKey();
+        }
+
+        public static void SwitchInicial(ref int x, ref int y, string entrada)
+        {
             int retira = 0;
             bool erro = false;
 
             for (int i = 0; i < entrada.Length; i++)
             {
-                
-                switch (entrada[i])
+                char letraAtual = entrada[i];
+                char letraAnterior = i > 0 ? entrada[i - 1] : ' ';
+
+                switch (letraAtual)
                 {
-                    case 'N': 
-                        y++; 
-                        retira = 0; 
-                        break;
-                    case 'S': 
-                        y--; 
+                    case 'N':
+                        y++;
                         retira = 0;
                         break;
-                    case 'L': 
-                        x++; 
-                        retira = 0; 
+                    case 'S':
+                        y--;
+                        retira = 0;
                         break;
-                    case 'O': 
-                        x--; 
-                        retira = 0; 
+                    case 'L':
+                        x++;
+                        retira = 0;
                         break;
-                    case 'X': 
+                    case 'O':
+                        x--;
+                        retira = 0;
+                        break;
+                    case 'X':
                         retira++;
-                        if(i > 0)
-                        {
-                            switch (entrada[i - retira])
-                            {
-                                case 'N':
-                                    y--;
-                                    retira++;
-                                    break;
-                                case 'S':
-                                    y++;
-                                    retira++;
-                                    break;
-                                case 'L':
-                                    x--;
-                                    retira++;
-                                    break;
-                                case 'O':
-                                    x++;
-                                    retira++;
-                                    break;
-                            }
-                        }
+                        if (i > 0) CaseX(ref x, ref y, entrada[i - retira], ref retira);                        
                         break;
                     default:
-                        if(entrada[i-1] != 'X')
+                        if (letraAnterior != 'X')
                         {
-                            switch (entrada[i - 1])
+                            switch (letraAnterior)
                             {
                                 case 'N':
                                     var num = "";
                                     int pular = 0;
-                                    foreach(var c in entrada.Substring(i))
-                                    {
-                                        try
-                                        {
-                                            int.Parse(c.ToString());
-                                            num += c;
-                                            pular++;
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            if (c == 'X')
-                                            {
-                                                num = "";
-                                                pular++;
-                                            }
-                                            break;
-                                        }
-                                    }
-                                    y = int.Parse(num);
-                                    //entrada = entrada.Replace(num, "");
-                                    //i--;
-                                    i += pular-1;
+                                    ForeachNumeric(ref num, ref pular, entrada.Substring(i));
+                                    if (!String.IsNullOrEmpty(num)) y = (int.Parse(num));
+                                    else CaseX(ref x, ref y, letraAnterior, ref retira);
+                                    i += pular - 1;
                                     break;
                                 case 'S':
                                     num = "";
                                     pular = 0;
-                                    foreach (var c in entrada.Substring(i))
-                                    {
-                                        try
-                                        {
-                                            int.Parse(c.ToString());
-                                            num += c;
-                                            pular++;
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            if (c == 'X')
-                                            {
-                                                num = "";
-                                                pular++;
-                                            }
-                                            break;
-                                        }
-                                    }
+                                    ForeachNumeric(ref num, ref pular, entrada.Substring(i));
                                     if (!String.IsNullOrEmpty(num)) y = -(int.Parse(num));
-                                    i += pular-1;
+                                    else CaseX(ref x, ref y, letraAnterior, ref retira);
+                                    i += pular - 1;
                                     break;
                                 case 'L':
                                     num = "";
-                                    foreach (var c in entrada.Substring(i))
-                                    {
-                                        try
-                                        {
-                                            int.Parse(c.ToString());
-                                            num += c;
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            break;
-                                        }
-                                    }
-                                    x = int.Parse(num);
+                                    pular = 0;
+                                    ForeachNumeric(ref num, ref pular, entrada.Substring(i));
+                                    if (!String.IsNullOrEmpty(num)) x = (int.Parse(num));
+                                    else CaseX(ref x, ref y, letraAnterior, ref retira);
                                     break;
                                 case 'O':
                                     num = "";
-                                    foreach (var c in entrada.Substring(i))
-                                    {
-                                        try
-                                        {
-                                            int.Parse(c.ToString());
-                                            num += c;
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            break;
-                                        }
-                                    }
-                                    x = -(int.Parse(num));
+                                    pular = 0;
+                                    ForeachNumeric(ref num, ref pular, entrada.Substring(i));
+                                    if (!String.IsNullOrEmpty(num)) x = -(int.Parse(num));
+                                    else CaseX(ref x, ref y, letraAnterior, ref retira);
                                     break;
                             }
                         }
@@ -158,16 +105,60 @@ namespace DesafioLinx
                         break;
                 }
 
-                if (erro) 
-                { 
-                    x = 999; 
-                    y = 999; 
-                    break; 
+                if (erro)
+                {
+                    x = 999;
+                    y = 999;
+                    break;
                 }
             }
+        }
 
-            Console.WriteLine($"({x}, {y})");
-            Console.ReadKey();
+        public static void CaseX(ref int x, ref int y, char letra, ref int retira)
+        {
+            
+            switch (letra)
+            {
+                case 'N':
+                    y--;
+                    retira++;
+                    break;
+                case 'S':
+                    y++;
+                    retira++;
+                    break;
+                case 'L':
+                    x--;
+                    retira++;
+                    break;
+                case 'O':
+                    x++;
+                    retira++;
+                    break;
+            }
+            
+        }
+
+        public static void ForeachNumeric(ref string num, ref int pular, string entrada)
+        {
+            foreach (var c in entrada)
+            {
+                try
+                {
+                    int.Parse(c.ToString());
+                    num += c;
+                    pular++;
+                }
+                catch (Exception ex)
+                {
+                    if (c == 'X')
+                    {
+                        num = "";
+                        pular++;
+                    }
+                    break;
+                }
+            }
         }
     }
 }
