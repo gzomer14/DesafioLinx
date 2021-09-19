@@ -65,25 +65,33 @@ namespace DesafioLinx
                             {
                                 case 'N':
                                     var num = "";
+                                    int pular = 0;
                                     foreach(var c in entrada.Substring(i))
                                     {
                                         try
                                         {
                                             int.Parse(c.ToString());
                                             num += c;
+                                            pular++;
                                         }
                                         catch (Exception ex)
                                         {
+                                            if (c == 'X')
+                                            {
+                                                num = "";
+                                                pular++;
+                                            }
                                             break;
                                         }
                                     }
                                     y = int.Parse(num);
-                                    entrada = entrada.Replace(num, "");
-                                    i--;
+                                    //entrada = entrada.Replace(num, "");
+                                    //i--;
+                                    i += pular-1;
                                     break;
                                 case 'S':
                                     num = "";
-                                    foreach (var c in entrada.Substring(0, i+1))
+                                    foreach (var c in entrada.Substring(i))
                                     {
                                         try
                                         {
@@ -95,11 +103,11 @@ namespace DesafioLinx
                                             break;
                                         }
                                     }
-                                    y = int.Parse(num);
+                                    y = -(int.Parse(num));
                                     break;
                                 case 'L':
                                     num = "";
-                                    foreach (var c in entrada.Substring(0, i+1))
+                                    foreach (var c in entrada.Substring(i))
                                     {
                                         try
                                         {
@@ -115,7 +123,7 @@ namespace DesafioLinx
                                     break;
                                 case 'O':
                                     num = "";
-                                    foreach (var c in entrada.Substring(0, i+1))
+                                    foreach (var c in entrada.Substring(i))
                                     {
                                         try
                                         {
@@ -127,7 +135,7 @@ namespace DesafioLinx
                                             break;
                                         }
                                     }
-                                    x = int.Parse(num);
+                                    x = -(int.Parse(num));
                                     break;
                             }
                         }
@@ -138,7 +146,12 @@ namespace DesafioLinx
                         break;
                 }
 
-                if (erro) break;
+                if (erro) 
+                { 
+                    x = 999; 
+                    y = 999; 
+                    break; 
+                }
             }
 
             Console.WriteLine($"({x}, {y})");
