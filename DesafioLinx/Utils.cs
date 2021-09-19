@@ -38,7 +38,10 @@ namespace DesafioLinx
                         break;
                     case 'X':
                         retira++;
+
+                        //Método para retirar posições incrementadas, de acordo com quantidade de X encontrado.
                         if (i > 0) CaseX(ref x, ref y, entrada[i - retira], ref retira);
+
                         break;
                     default:
                         //Validar se a letra anterior a sequencia numérica não é um X, caso for dispara erro.
