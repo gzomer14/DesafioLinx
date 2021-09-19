@@ -45,15 +45,19 @@ namespace DesafioLinx
                             {
                                 case 'N':
                                     y--;
+                                    retira++;
                                     break;
                                 case 'S':
                                     y++;
+                                    retira++;
                                     break;
                                 case 'L':
                                     x--;
+                                    retira++;
                                     break;
                                 case 'O':
                                     x++;
+                                    retira++;
                                     break;
                             }
                         }
@@ -91,19 +95,27 @@ namespace DesafioLinx
                                     break;
                                 case 'S':
                                     num = "";
+                                    pular = 0;
                                     foreach (var c in entrada.Substring(i))
                                     {
                                         try
                                         {
                                             int.Parse(c.ToString());
                                             num += c;
+                                            pular++;
                                         }
                                         catch (Exception ex)
                                         {
+                                            if (c == 'X')
+                                            {
+                                                num = "";
+                                                pular++;
+                                            }
                                             break;
                                         }
                                     }
-                                    y = -(int.Parse(num));
+                                    if (!String.IsNullOrEmpty(num)) y = -(int.Parse(num));
+                                    i += pular-1;
                                     break;
                                 case 'L':
                                     num = "";
